@@ -1,4 +1,4 @@
-import {React, useEffect, useRef, useState} from "react";
+import { useState } from "react";
 import "./App.css";
 import {
   PayPalScriptProvider,
@@ -14,26 +14,22 @@ const paypalScriptOptions: PayPalScriptOptions = {
 
 function Button() {
    
-const [cartValue,setValue]=useState('19');
-const cartValueRef=useRef(cartValue);
-
+const [cartValue,setValue]=useState(0);
 const items=["VANMOOF BIKE $2000","STEAL BIKE $40 fOR BOLT CUTTER","RENT BIKE $20","SPECIALIZED BIKE USED WITH CUM STAINS $400"];
 const prices=[2000.00,40.00,20.00,400.00];
 
   const [{ isPending }] = usePayPalScriptReducer();
-  useEffect(() => {
-    cartValueRef.current = cartValue;
-  }, [cartValue]);
-const paypalbuttonTransactionProps: PayPalButtonsComponentProps = {
-
-    style: { layout: "vertical",color:"white" },
+  const paypalbuttonTransactionProps: PayPalButtonsComponentProps = {
+	  
+// Style the buttons with allowed PayPal values *****
+    style: { layout: "vertical" },
     createOrder(data, actions) {
       return actions.order.create({
         purchase_units: [
           {
             amount: {
 // Replace hardcoded value with the variable created above *****
-              value: cartValueRef.current
+              value: cartValue.toString()
             }
           }
         ]
@@ -64,18 +60,14 @@ const paypalbuttonTransactionProps: PayPalButtonsComponentProps = {
     </div>
 
       {isPending ? <h2>Load Smart Payment Button...</h2> : null}
-      <div className="buttonholder">
-      <div className="paypalButtons">
       <PayPalButtons {...paypalbuttonTransactionProps} />
-      </div>
-      </div>
     </>
   );
 }
 export default function App() {
   return (
     <div className="App">
-      <h1>Hi there!</h1>
+      <h1>Hello PayPal</h1>
       <PayPalScriptProvider options={paypalScriptOptions}>
         <Button />
       </PayPalScriptProvider>
